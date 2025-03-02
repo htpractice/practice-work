@@ -1,4 +1,4 @@
-clusterName: CLUSTER-NAME
+clusterName: practice-workshop
 region: us-east-1
 serviceAccount:
   # Specifies whether a service account should be created
