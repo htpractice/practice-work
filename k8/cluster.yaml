@@ -29,15 +29,20 @@ nodeGroups:
       App: critical
     availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
   - name: spot-worker-nodes
-    instanceType: t2.medium
-    desiredCapacity: 2
-    spot: true
+    minSize: 2
+    maxSize: 2
+    instancesDistribution:
+      maxPrice: 0.017
+      instanceTypes: ["t3.small", "t3.medium"] # At least one instance type should be specified
+      onDemandBaseCapacity: 0
+      onDemandPercentageAboveBaseCapacity: 0
+      spotInstancePools: 2
     ssh:
       allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
     availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
     taints: # taints are used to repel pods from nodes
       - key: App
-        value: spot
+        value: poc
         effect: NoSchedule
     labels:
-      App: spot
+      App: poc

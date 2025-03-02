@@ -1,0 +1,105 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voting-app-deploy
+  labels:
+    name: voting-app-deploy
+    app: demo-voting-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: voting-app-pod
+      app: demo-voting-app
+  template:
+    metadata:
+      name: voting-app-pod
+      labels:
+        name: voting-app-pod
+        app: demo-voting-app
+    spec:
+      containers:
+      - name: voting-app
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "2"
+        ports:
+        - containerPort: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: voting-app-hpa
+  labels:
+    name: voting-app-hpa
+    app: demo-voting-app
+scaleTargetRef:
+  apiVersion: apps/v1
+  kind: Deployment
+  name: voting-app-deploy
+minReplicas: 3
+maxReplicas: 10
+metrics:
+- type: Resource
+  resource:
+    name: memory
+    target:
+      type: Utilization
+      averageUtilization: 50
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: affinity-vote
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: affinity-vote
+  template:
+    metadata:
+      labels:
+        app: affinity-vote
+    spec:
+      containers:
+      - name: affinity-vote
+        image: hthaware2508/demo-vote:v1
+        resources:
+          requests:
+            cpu: ".25"
+            memory: "250Mi"
+          limits:
+            cpu: ".5"
+            memory: "1Gi"
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      tolerations:
+      - key: affinity-test
+        operator: Equal
+        value: critical
+        effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: affinity-test
+                operator: In
+                values:
+                - critical
+---

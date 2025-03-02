@@ -1,0 +1,53 @@
+# This manifest will deal with tolerations, Probes and Affinity in the deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: affinity-vote
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: affinity-vote
+  template:
+    metadata:
+      labels:
+        app: affinity-vote
+    spec:
+      containers:
+      - name: affinity-vote
+        image: hthaware2508/demo-vote:v1
+        resources:
+          requests:
+            cpu: ".25"
+            memory: "250Mi"
+          limits:
+            cpu: ".5"
+            memory: "1Gi"
+      readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      tolerations: # This is used to schedule pods on nodes with taints
+      - key: App
+        operator: Equal
+        value: critical
+        effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: App
+                operator: In
+                values:
+                - critical
+---
