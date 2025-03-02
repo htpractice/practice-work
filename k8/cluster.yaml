@@ -1,0 +1,43 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata: # metadata for the cluster
+  name: practice-workshop
+  region: us-east-1
+availabilityZones: # specify the availability zones for the control plane eksctl will use the first three zones by default
+  - us-east-1a
+  - us-east-1b
+  - us-east-1c
+
+nodeGroups:
+  - name: ondemand-normal-worker-nodes
+    instanceType: t2.medium
+    desiredCapacity: 2
+    ssh:
+      allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
+    availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
+  - name: ondemand-critical-worker-nodes
+    instanceType: t2.medium
+    desiredCapacity: 2
+    taints: # taints are used to repel pods from nodes
+      - key: App
+        value: critical
+        effect: NoSchedule
+    ssh:
+      allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
+    labels:
+      App: critical
+    availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
+  - name: spot-worker-nodes
+    instanceType: t2.medium
+    desiredCapacity: 2
+    spot: true
+    ssh:
+      allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
+    availabilityZones: ["us-east-1a", "us-east-1b", "us-east-1c"]
+    taints: # taints are used to repel pods from nodes
+      - key: App
+        value: spot
+        effect: NoSchedule
+    labels:
+      App: spot
