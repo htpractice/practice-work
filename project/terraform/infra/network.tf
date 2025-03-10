@@ -77,6 +77,7 @@ module "bastion_sg" {
     }
   ]
   tags = {
+    "Name" = "${var.environment}-bastion-sg"
     "Terraform" = "true"
     "Environment" = var.environment
   }
@@ -109,6 +110,7 @@ module "private_instance_sg" {
       }
       ]
       tags = {
+        "Name" = "${var.environment}-private-instance-sg"
         "Terraform" = "true"
         "Environment" = var.environment
       }
@@ -126,7 +128,7 @@ module "public_instance_sg" {
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
-      description = "SSH from VPC"
+      description = "SSH from SELF IP"
       cidr_blocks = "${chomp(data.http.self_ip.response_body)}/32" # Remove the newline character and add /32
     },
     {
@@ -140,7 +142,7 @@ module "public_instance_sg" {
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
-      description = "HTTPS from VPC"
+      description = "HTTPS from SELF IP"
       cidr_blocks = "${chomp(data.http.self_ip.response_body)}/32" # Remove the newline character and add /32
     }
     ]
@@ -155,6 +157,7 @@ module "public_instance_sg" {
         }
     ]
     tags = {
+        "Name" = "${var.environment}-public-instance-sg"
         "Terraform" = "true"
         "Environment" = var.environment
     }
