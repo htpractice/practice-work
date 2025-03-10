@@ -10,7 +10,7 @@ module "devops-ninja-vpc" {
   private_subnet_names = ["${var.environment}-private-a, ${var.environment}-private-b"]
   public_subnets  = var.public_subnets
   public_subnet_names = ["${var.environment}-public-a, ${var.environment}-public-b"]
-  nat_gateway_azs    = ["${var.azs[0]}"] # NAT Gateway will be created in the first AZ
+  #nat_gateway_azs    = ["${var.azs[0]}"] # NAT Gateway will be created in the first AZ
   single_nat_gateway = true #Only 1 NAT Gateway (in AZ-a) will be created if true, otherwise one NAT Gateway per AZ
   enable_nat_gateway = true #NAT Gateway will be created if true
   tags = {
