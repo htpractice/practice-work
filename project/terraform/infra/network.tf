@@ -127,21 +127,21 @@ module "public_instance_sg" {
       to_port     = 22
       protocol    = "tcp"
       description = "SSH from VPC"
-      source_security_group_id = module.bastion_sg.security_group_id
+      cidr_blocks = "${chomp(data.http.self_ip.response_body)}/32" # Remove the newline character and add /32
     },
     {
       from_port   = 80
       to_port     = 80
       protocol    = "tcp"
-      description = "HTTP from VPC"
-      source_security_group_id = module.public_instance_sg.security_group_id
+      description = "HTTP from SELF IP"
+      cidr_blocks = "${chomp(data.http.self_ip.response_body)}/32" # Remove the newline character and add /32
     },
     {
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
       description = "HTTPS from VPC"
-      cidr_blocks = var.vpc_cidr
+      cidr_blocks = "${chomp(data.http.self_ip.response_body)}/32" # Remove the newline character and add /32
     }
     ]
   egress_cidr_blocks      = ["0.0.0.0/0"]
