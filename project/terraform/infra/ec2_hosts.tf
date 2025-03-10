@@ -56,7 +56,7 @@ module "app" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
   count = var.app_count
-  name           = "${var.environment}-app-${each.value + 1}"
+  name           = "${var.environment}-app-${count.index + 1}"
   ami            = var.ami
   instance_type  = var.instance_type
   key_name       = aws_key_pair.generated_key.key_name
