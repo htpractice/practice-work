@@ -12,7 +12,7 @@ resource "aws_key_pair" "generated_key" {
 # Store th ekey in a file
 resource "local_file" "private_key_pem" {
   content              = tls_private_key.instance_key.private_key_pem
-  filename             = "${path.module}/private_key.pem"
+  filename             = "private_key.pem"
   file_permission      = "0600"
 }
 
