@@ -18,6 +18,7 @@ module "bastion" {
   name           = "${var.environment}-bastion"
   ami            = var.ami
   instance_type  = var.instance_type
+  associate_public_ip_address = true
   key_name       = aws_key_pair.generated_key.key_name
   subnet_id      = module.devops-ninja-vpc.public_subnets[0]
   vpc_security_group_ids = [module.bastion_sg.security_group_id]
