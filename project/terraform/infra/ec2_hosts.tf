@@ -55,15 +55,15 @@ module "jenkins" {
 module "app" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
-  for_each = var.azs_map
+  count = var.app_count
   name           = "${var.environment}-app-${each.value + 1}"
   ami            = var.ami
   instance_type  = var.instance_type
   key_name       = aws_key_pair.generated_key.key_name
   subnet_id      = module.devops-ninja-vpc.public_subnets[0]
   vpc_security_group_ids = [module.public_instance_sg.security_group_id]
-  availability_zone = each.key
+  availability_zone = var.azs[count.index % length(var.azs)]
   tags = {
-    Name = "${var.environment}-app-${each.value + 1}"
+    Name = "${var.environment}-app-${count.index + 1}"
   }
 }
