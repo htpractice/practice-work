@@ -8,6 +8,14 @@ module "devops-ninja-vpc" {
   azs             = var.azs
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
+  nat_gateway_tags = {
+    Name = "${var.environment}-nat-gateway"
+    Environment = var.environment
+  }
+  igw_tags = {
+    Name = "${var.environment}-igw"
+    Environment = var.environment
+  }
   public_route_table_tags = {
     Name = "${var.environment}-public-rt"
     Environment = var.environment
