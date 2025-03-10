@@ -40,7 +40,11 @@ variable "ami" {
   default = "ami-04b4f1a9cf54c11d0"
 }
 
-variable "app_count" {
-  description = "The count of instances to launch"
-  default = 2
+variable "azs_map" {
+  description = "Availability Zones"
+  type        = map(string)
+  default = {
+        "us-east-1a" = "0",
+        "us-east-1b" = "1"
+  }
 }
