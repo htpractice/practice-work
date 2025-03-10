@@ -55,7 +55,7 @@ module "jenkins" {
 module "app" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
-  for_each = var.azs
+  for_each = var.azs_map
   name           = "${var.environment}-app-${each.value + 1}"
   ami            = var.ami
   instance_type  = var.instance_type
