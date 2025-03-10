@@ -112,7 +112,7 @@ module "private_instance_sg" {
   name        = "${var.environment}-private-instance-sg"
   description = "Security group for private instances"
   vpc_id      = module.devops-ninja-vpc.vpc_id
-  ingress_cidr_blocks = var.vpc_cidr
+  ingress_cidr_blocks = ["${var.vpc_cidr}"]
   ingress_with_cidr_blocks = [
     {
       from_port   = 0
@@ -144,7 +144,7 @@ module "public_instance_sg" {
   name        = "${var.environment}-public-instance-sg"
   description = "Security group for public instances"
   vpc_id      = module.devops-ninja-vpc.vpc_id
-  ingress_cidr_blocks = var.vpc_cidr
+  ingress_cidr_blocks = ["${var.vpc_cidr}"]
   ingress_with_cidr_blocks = [
     {
       from_port   = 22
