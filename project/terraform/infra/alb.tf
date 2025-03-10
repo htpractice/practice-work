@@ -34,8 +34,12 @@ resource "aws_lb_listener" "front_end" {
   }
 }
 
+# ➡️ Use a map instead of a set for for_each.
+# ➡️ Ensure keys are known at plan time, even if values aren’t.
 resource "aws_lb_target_group_attachment" "front_end" {
-  for_each         = toset(module.app.*.id)
+  for_each = {
+    for idx, id in module.app[*].id : idx => id
+  }
   target_group_arn = aws_lb_target_group.front_end.arn
   target_id        = each.value
   port             = 80
