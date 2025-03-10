@@ -47,12 +47,12 @@ resource "aws_route_table" "private_rt" {
 resource "aws_route_table_association" "public_rt" {
   count          = length(var.public_subnets)
   subnet_id      = element(module.devops-ninja-vpc.public_subnets, count.index)
-  route_table_id = aws_route_table.public.id
+  route_table_id = aws_route_table.public_rt.id
 }
 resource "aws_route_table_association" "private_rt" {
   count          = length(var.private_subnets)
   subnet_id      = element(module.devops-ninja-vpc.private_subnets, count.index)
-  route_table_id = aws_route_table.private.id
+  route_table_id = aws_route_table.private_rt.id
 }
 
 #--------------------Creating Security Groups--------------------
@@ -73,21 +73,21 @@ module "bastion_sg" {
       to_port     = 22
       protocol    = "tcp"
       description = "SSH from self IP"
-      cidr_blocks = [chomp(data.http.self_ip.response)]
+      cidr_blocks = data.http.self_ip.response_body
     },
     {
       from_port   = 80
       to_port     = 80
       protocol    = "tcp"
       description = "HTTP from VPC"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     },
     {
       from_port   = 443
       to_port     = 443
       protocol    = "tcp"
       description = "HTTPS from VPC"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     }
   ]
   egress_cidr_blocks      = ["0.0.0.0/0"]
@@ -97,7 +97,7 @@ module "bastion_sg" {
       to_port     = 0
       protocol    = "-1"
       description = "All traffic"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     }
   ]
   tags = {
