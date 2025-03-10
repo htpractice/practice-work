@@ -2,7 +2,7 @@ resource "aws_lb" "app_alb" {
   name               = "app-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [module.public_instance_sg.this_security_group_id]
+  security_groups    = [module.public_instance_sg.security_group_id]
   subnets            = module.devops-ninja-vpc.public_subnets
 }
 
