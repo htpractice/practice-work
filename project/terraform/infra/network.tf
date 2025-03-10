@@ -19,35 +19,35 @@ module "devops-ninja-vpc" {
 
 #-------------------Route Tables-------------------
 # create route tables for public and private subnets
-resource "aws_route_table" "public" {
+resource "aws_route_table" "public_rt" {
   vpc_id = module.devops-ninja-vpc.vpc_id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = module.devops-ninja-vpc.internet_gateway_id
     }
     tags = {
-        "Name" = "${var.environment}-public"
+        "Name" = "${var.environment}-public-rt"
         Environment = var.environment
     }
 }
-resource "aws_route_table" "private" {
+resource "aws_route_table" "private_rt" {
   vpc_id = module.devops-ninja-vpc.vpc_id
   route = {
     cidr_block = "0.0.0.0/0"
     nat_gateway_id = module.devops-ninja-vpc.nat_gateway_id
   }
   tags = {
-    "Name" = "${var.environment}-private"
+    "Name" = "${var.environment}-private-rt"
     Environment = var.environment
   }
 }
 # associate the route tables with the subnets
-resource "aws_route_table_association" "public" {
+resource "aws_route_table_association" "public_rt" {
   count          = length(var.public_subnets)
   subnet_id      = element(module.devops-ninja-vpc.public_subnets, count.index)
   route_table_id = aws_route_table.public.id
 }
-resource "aws_route_table_association" "private" {
+resource "aws_route_table_association" "private_rt" {
   count          = length(var.private_subnets)
   subnet_id      = element(module.devops-ninja-vpc.private_subnets, count.index)
   route_table_id = aws_route_table.private.id
