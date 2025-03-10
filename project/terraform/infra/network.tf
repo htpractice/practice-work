@@ -40,7 +40,7 @@ data "http" "self_ip" {
 module "bastion_sg" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name        = "${var.environment}-security-group"
+  name        = "${var.environment}-bastion-sg"
   description = "Security group for Bastion Host"
   vpc_id      = module.devops-ninja-vpc.vpc_id
   ingress_with_cidr_blocks = [
