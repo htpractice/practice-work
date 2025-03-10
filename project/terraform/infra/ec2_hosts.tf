@@ -20,7 +20,7 @@ module "bastion" {
   instance_type  = var.instance_type
   key_name       = aws_key_pair.generated_key.key_name
   subnet_id      = module.devops-ninja-vpc.public_subnets[0]
-  vpc_security_group_ids = [module.bastion_sg.this_security_group_id]
+  vpc_security_group_ids = [module.bastion_sg.security_group_id]
 
   tags = {
     Name = "${var.environment}-bastion"
@@ -37,7 +37,7 @@ module "jenkins" {
   instance_type  = var.instance_type
   key_name       = aws_key_pair.generated_key.key_name
   subnet_id      = module.devops-ninja-vpc.private_subnets[0]
-  vpc_security_group_ids = [module.private_instance_sg.this_security_group_id]
+  vpc_security_group_ids = [module.private_instance_sg.security_group_id]
 
   tags = {
     Name = "${var.environment}-jenkins"
@@ -54,7 +54,7 @@ module "app" {
   instance_type  = var.instance_type
   key_name       = aws_key_pair.generated_key.key_name
   subnet_id      = module.devops-ninja-vpc.public_subnets[0]
-  vpc_security_group_ids = [module.public_instance_sg.this_security_group_id]
+  vpc_security_group_ids = [module.public_instance_sg.security_group_id]
   count          = var.app_count
 
   tags = {
