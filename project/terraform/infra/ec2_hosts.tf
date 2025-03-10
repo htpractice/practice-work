@@ -31,6 +31,7 @@ module "bastion" {
 
   tags = {
     Name = "${var.environment}-bastion"
+    Environment = var.environment
   }
 }
 
@@ -48,6 +49,7 @@ module "jenkins" {
 
   tags = {
     Name = "${var.environment}-jenkins"
+    Environment = var.environment
   }
 }
 
@@ -65,5 +67,6 @@ module "app" {
   availability_zone = var.azs[count.index % length(var.azs)]
   tags = {
     Name = "${var.environment}-app-${count.index + 1}"
+    Environment = var.environment
   }
 }
