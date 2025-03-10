@@ -35,7 +35,7 @@ resource "aws_route_table" "private_rt" {
   vpc_id = module.devops-ninja-vpc.vpc_id
   route = {
     cidr_block = "0.0.0.0/0"
-    nat_gateway_id = module.devops-ninja-vpc.natgw_ids["us-east-1a"]
+    nat_gateway_id = module.devops-ninja-vpc.natgw_ids[0]
 
   }
   tags = {
@@ -73,7 +73,7 @@ module "bastion_sg" {
       to_port     = 22
       protocol    = "tcp"
       description = "SSH from self IP"
-      cidr_blocks = data.http.self_ip.response_body
+      cidr_blocks = chomp(data.http.self_ip.response_body) # Remove the newline character
     },
     {
       from_port   = 80
