@@ -75,7 +75,7 @@ module "bastion_sg" {
       to_port     = 22
       protocol    = "tcp"
       description = "SSH from self IP"
-      cidr_blocks = chomp(data.http.self_ip.response_body) + "/32" # Remove the newline character and add /32
+      cidr_blocks = "${chomp(data.http.self_ip.response_body)}/32" # Remove the newline character and add /32
     },
     {
       from_port   = 80
