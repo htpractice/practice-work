@@ -7,9 +7,7 @@ module "devops-ninja-vpc" {
   cidr = var.vpc_cidr
   azs             = var.azs
   private_subnets = var.private_subnets
-  private_subnet_names = ["${var.environment}-private-a, ${var.environment}-private-b"]
   public_subnets  = var.public_subnets
-  public_subnet_names = ["${var.environment}-public-a, ${var.environment}-public-b"]
   public_route_table_tags = {
     Name = "${var.environment}-public-rt"
     Environment = var.environment
