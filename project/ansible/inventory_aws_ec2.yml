@@ -1,0 +1,12 @@
+---
+# make sure name of inventory file should contain aws_ec2 with suffix as .yml
+# Content: This snippet is an inventory file that specifies the region where the EC2 instances are located. The region is us-east-1.
+plugin: amazon.aws.aws_ec2
+regions:
+  - us-east-1
+filters:
+  # # This selects only running instances with tag `Name` set to `jenkins` or `app`.
+  tag:Name: ["*-jenkins*", "*-app*"]
+  #tag:Terraform: true
+  tag:Environment: dev
+  instance-state-name: running
