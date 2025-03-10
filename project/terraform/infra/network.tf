@@ -23,7 +23,7 @@ module "devops-ninja-vpc" {
 # create route tables for public and private subnets
 resource "aws_route_table" "public_rt" {
   vpc_id = module.devops-ninja-vpc.vpc_id
-  route = {
+  route {
     cidr_block = "0.0.0.0/0"
     gateway_id = module.devops-ninja-vpc.igw_id
     }
@@ -35,9 +35,9 @@ resource "aws_route_table" "public_rt" {
 }
 resource "aws_route_table" "private_rt" {
   vpc_id = module.devops-ninja-vpc.vpc_id
-  route = {
+  route {
     cidr_block = "0.0.0.0/0"
-    nat_gateway_id = module.devops-ninja-vpc.natgw_ids.id
+    nat_gateway_id = module.devops-ninja-vpc.natgw_ids[0]
     }
 
     tags = {
