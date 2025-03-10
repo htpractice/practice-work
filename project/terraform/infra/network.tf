@@ -25,7 +25,7 @@ resource "aws_route_table" "public_rt" {
   vpc_id = module.devops-ninja-vpc.vpc_id
   route = {
     cidr_block = "0.0.0.0/0"
-    gateway_id = module.devops-ninja-vpc.igw_id.id
+    gateway_id = module.devops-ninja-vpc.igw_id
     }
 
     tags = {
@@ -39,7 +39,7 @@ resource "aws_route_table" "private_rt" {
     cidr_block = "0.0.0.0/0"
     nat_gateway_id = module.devops-ninja-vpc.natgw_ids.id
     }
-    
+
     tags = {
         Name = "${var.environment}-private-rt"
         Environment = var.environment
