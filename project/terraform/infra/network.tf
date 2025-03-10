@@ -10,7 +10,14 @@ module "devops-ninja-vpc" {
   private_subnet_names = ["${var.environment}-private-a, ${var.environment}-private-b"]
   public_subnets  = var.public_subnets
   public_subnet_names = ["${var.environment}-public-a, ${var.environment}-public-b"]
-  #nat_gateway_azs    = ["${var.azs[0]}"] # NAT Gateway will be created in the first AZ
+  public_route_table_tags = {
+    Name = "${var.environment}-public-rt"
+    Environment = var.environment
+  }
+  private_route_table_tags = {
+    Name = "${var.environment}-private-rt"
+    Environment = var.environment
+  }
   single_nat_gateway = true #Only 1 NAT Gateway (in AZ-a) will be created if true, otherwise one NAT Gateway per AZ
   enable_nat_gateway = true #NAT Gateway will be created if true
   tags = {
@@ -18,45 +25,6 @@ module "devops-ninja-vpc" {
     "Environment" = var.environment
   }
 }
-
-#-------------------Route Tables-------------------
-# create route tables for public and private subnets
-resource "aws_route_table" "public_rt" {
-  vpc_id = module.devops-ninja-vpc.vpc_id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = module.devops-ninja-vpc.igw_id
-    }
-
-    tags = {
-        Name = "${var.environment}-public-rt"
-        Environment = var.environment
-    }
-}
-resource "aws_route_table" "private_rt" {
-  vpc_id = module.devops-ninja-vpc.vpc_id
-  route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = module.devops-ninja-vpc.natgw_ids[0]
-    }
-
-    tags = {
-        Name = "${var.environment}-private-rt"
-        Environment = var.environment
-    }
-}
-# associate the route tables with the subnets
-resource "aws_route_table_association" "public_rt" {
-  count          = length(var.public_subnets)
-  subnet_id      = element(module.devops-ninja-vpc.public_subnets, count.index)
-  route_table_id = aws_route_table.public_rt.id
-}
-resource "aws_route_table_association" "private_rt" {
-  count          = length(var.private_subnets)
-  subnet_id      = element(module.devops-ninja-vpc.private_subnets, count.index)
-  route_table_id = aws_route_table.private_rt.id
-}
-
 #--------------------Creating Security Groups--------------------
 # Fetch the self IP using a public API
 data "http" "self_ip" {
