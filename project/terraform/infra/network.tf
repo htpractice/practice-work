@@ -2,6 +2,7 @@
 # Create a VPC with public and private subnets
 module "devops-ninja-vpc" {
   source = "terraform-aws-modules/vpc/aws"
+  version = ">= 3.0.0"
   name = "${var.environment}-vpc"
   cidr = var.vpc_cidr
   azs             = var.azs
